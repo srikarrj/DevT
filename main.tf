@@ -55,8 +55,8 @@ resource "aws_ecs_service" "medusa_service" {
   launch_type      = "FARGATE"
   network_configuration {
     awsvpc_configuration {
-      subnets          = ["<subnet_id>"]
-      security_groups = ["<security_group_id>"]
+      subnets          = ["<subnet-0d8556b1f3147578b>"]
+      security_groups = ["<sg-0924a4b2e1c615373>"]
       assign_public_ip = "ENABLED"
     }
   }
