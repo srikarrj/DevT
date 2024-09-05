@@ -7,7 +7,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
   cpu                   = 256
   memory                = 512
   network_mode          = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
+
   container_definitions = jsonencode([
     {
       name      = "medusa-container"
@@ -44,7 +44,7 @@ resource "aws_ecs_service" "medusa_service" {
   name            = "medusa-service"
   cluster         = aws_ecs_cluster.medusa_cluster.name
   task_definition = aws_ecs_task_definition.medusa_task.arn
-  launch_type      = "FARGATE"
+  
   network_configuration {
     awsvpc_configuration {
       subnets          = ["<subnet_id>"]
