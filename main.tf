@@ -1,4 +1,3 @@
-terraform
 resource "aws_ecs_cluster" "medusa_cluster" {
   name = "medusa-ecs-cluster"
 }
@@ -54,3 +53,4 @@ resource "aws_ecs_service" "medusa_service" {
     }
   }
 }
+
