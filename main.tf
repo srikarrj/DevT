@@ -1,3 +1,4 @@
+terraform
 resource "aws_ecs_cluster" "medusa_cluster" {
   name = "medusa-ecs-cluster"
 }
@@ -45,7 +46,6 @@ resource "aws_ecs_service" "medusa_service" {
   cluster         = aws_ecs_cluster.medusa_cluster.name
   task_definition = aws_ecs_task_definition.medusa_task.arn
   launch_type      = "FARGATE"
-  capacity_providers = ["FARGATE"]
   network_configuration {
     awsvpc_configuration {
       subnets          = ["<subnet_id>"]
@@ -54,5 +54,3 @@ resource "aws_ecs_service" "medusa_service" {
     }
   }
 }
-
-
