@@ -22,19 +22,19 @@ resource "aws_ecs_task_definition" "medusa_task" {
       environment = [
         {
           name  = "MEDUSA_DB_USERNAME"
-          value = "<jadav>"
+          value = "mydbuser"
         },
         {
           name  = "MEDUSA_DB_PASSWORD"
-          value = "<password>"
+          value = "mydbpassword"
         },
         {
           name  = "MEDUSA_DB_HOST"
-          value = "<db_host>"
+          value = "(link unavailable)"
         },
         {
           name  = "MEDUSA_DB_PORT"
-          value = "<db_port>"
+          value = "5432"
         }
       ]
     }
