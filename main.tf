@@ -1,22 +1,66 @@
+# infrastructure/terraform/
+
+provider "aws" {
+  region = "us-east-1"
+}
+
 resource "aws_ecs_cluster" "medusa_cluster" {
-  name = "medusa-cluster"
-
-  # ... Add other cluster configuration options (if needed)
+  name = "medusa-ecs-cluster"
+  capacity_providers = ["FARGATE"]
+  default_capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+  }
 }
 
-# Create a Fargate task definition
 resource "aws_ecs_task_definition" "medusa_task" {
-  # ... Define your task definition here
+  family                = "medusa-task-definition"
+  cpu                   = 256
+  memory                = 512
+  network_mode          = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions = jsonencode([
+    {
+      name      = "medusa-container"
+      image     = "medusajs/medusa:latest"
+      portMappings = [
+        {
+          containerPort = 9000
+          hostPort      = 9000
+        }
+      ]
+      environment = [
+        {
+          name  = "MEDUSA_DB_USERNAME"
+          value = "<db_username>"
+        },
+        {
+          name  = "MEDUSA_DB_PASSWORD"
+          value = "<db_password>"
+        },
+        {
+          name  = "MEDUSA_DB_HOST"
+          value = "<db_host>"
+        },
+        {
+          name  = "MEDUSA_DB_PORT"
+          value = "<db_port>"
+        }
+      ]
+    }
+  ])
 }
 
-# Create an ECS service
 resource "aws_ecs_service" "medusa_service" {
-  name = "medusa-service"
-  cluster = aws_ecs_cluster.medusa_cluster.name
+  name            = "medusa-service"
+  cluster         = aws_ecs_cluster.medusa_cluster.name
   task_definition = aws_ecs_task_definition.medusa_task.arn
-  desired_count = 1
-  launch_type = "FARGATE"
+  launch_type      = "FARGATE"
+  network_configuration {
+    awsvpc_configuration {
+      subnets          = ["<subnet_id>"]
+      security_groups = ["<security_group_id>"]
+      assign_public_ip = "ENABLED"
+    }
+  }
 }
 
-# Create a load balancer (optional) as shown in the previous response
-# ... (load balancer configuration)
