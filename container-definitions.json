@@ -1,0 +1,33 @@
+# infrastructure/terraform/container-definitions.json
+
+[
+  {
+    "name": "medusa-container",
+    "image": "medusajs/medusa:latest",
+    "portMappings": [
+      {
+        "containerPort": 9000,
+        "hostPort": 9000
+      }
+    ],
+    "environment": [
+      {
+        "name": "MEDUSA_DB_USERNAME",
+        "value": "<db_username>"
+      },
+      {
+        "name": "MEDUSA_DB_PASSWORD",
+        "value": "<db_password>"
+      },
+      {
+        "name": "MEDUSA_DB_HOST",
+        "value": "<db_host>"
+      },
+      {
+        "name": "MEDUSA_DB_PORT",
+        "value": "<db_port>"
+      }
+    ]
+  }
+]
+
