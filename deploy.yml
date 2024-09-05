@@ -13,7 +13,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.3.0" # Replace with your desired version
+          terraform_version: "1.9.5" 
       - name: Initialize Terraform
         run: terraform init
       - name: Apply Terraform changes
