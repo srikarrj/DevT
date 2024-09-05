@@ -1,3 +1,4 @@
+terraform
 resource "aws_ecs_cluster" "medusa_cluster" {
   name = "medusa-ecs-cluster"
 }
@@ -7,7 +8,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
   cpu                   = 256
   memory                = 512
   network_mode          = "awsvpc"
-
+  requires_compatibilities = ["FARGATE"]
   container_definitions = jsonencode([
     {
       name      = "medusa-container"
@@ -21,11 +22,11 @@ resource "aws_ecs_task_definition" "medusa_task" {
       environment = [
         {
           name  = "MEDUSA_DB_USERNAME"
-          value = "<db_username>"
+          value = "<jadav>"
         },
         {
           name  = "MEDUSA_DB_PASSWORD"
-          value = "<db_password>"
+          value = "<password>"
         },
         {
           name  = "MEDUSA_DB_HOST"
@@ -44,11 +45,12 @@ resource "aws_ecs_service" "medusa_service" {
   name            = "medusa-service"
   cluster         = aws_ecs_cluster.medusa_cluster.name
   task_definition = aws_ecs_task_definition.medusa_task.arn
-  
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
   network_configuration {
     awsvpc_configuration {
-      subnets          = ["<subnet_id>"]
-      security_groups = ["<security_group_id>"]
+      subnets          = ["<subnet-0d8556b1f3147578b>"]
+      security_groups = ["<sg-0924a4b2e1c615373>"]
       assign_public_ip = "ENABLED"
     }
   }
