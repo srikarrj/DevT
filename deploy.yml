@@ -1,36 +1,20 @@
-
-
-# .github/workflows/deploy.yml
-
-name: Medusa CD Pipeline
+name: Deploy Medusa Backend
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Login to AWS
-        uses: aws-actions/login@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - name: Apply Terraform configuration
-        run: terraform apply -auto-approve
-      - name: Build and push Medusa image
-        run: |
-          docker build -t medusajs/medusa:latest .
-          docker push medusajs/medusa:latest
-      - name: Update ECS task definition
-        run: |
-          aws ecs update-task-definition --cluster medusa-ecs-cluster --task-definition medusa-task-definition --container-definitions file://container-definitions.json
-      - name: Update ECS service
-        run: |
-          aws ecs update-service --cluster medusa-ecs-cluster --service medusa-service --task-definition medusa-task-definition
 
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.3.0" # Replace with your desired version
+      - name: Initialize Terraform
+        run: terraform init
+      - name: Apply Terraform changes
+        run: terraform apply -auto-approve
